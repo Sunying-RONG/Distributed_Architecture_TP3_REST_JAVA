@@ -1,8 +1,15 @@
 package com.example.demo.controllers;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,7 +18,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -104,18 +114,31 @@ public class HotelController1 {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
+//	download
+//	@GetMapping(uri+"/hotel/image")
+//	public void downloadImage(HttpServletResponse response, @RequestParam String imageName) throws IOException {
+//		File file = new File("src/main/java/com/example/demo/repositories/images/"+imageName+".jpg");
+//		
+//		if(file.exists()) {
+//	        String contentType = "application/octet-stream";
+//	        response.setContentType(contentType);
+//	        OutputStream out = response.getOutputStream();
+//	        FileInputStream in = new FileInputStream(file);
+//	        // copy from in to out
+//	        IOUtils.copy(in, out);
+//	        out.close();
+//	        in.close();
+//	    }else {
+//	        throw new FileNotFoundException();
+//	    }
+//	}
 	@GetMapping(uri+"/hotel/image")
-	public Image downloadImage(@RequestParam String imageName) {
-		File image = new File("src/main/java/com/example/demo/repositories/images/"+imageName+".jpg");
-		System.out.println("src/main/java/com/example/demo/repositories/images/"+imageName+".jpg");
-        try {
-            return ImageIO.read(image);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		return null;
+	public void getImage(HttpServletResponse res, @RequestParam String imageName) throws IOException {
+	    java.nio.file.Path path = Paths.get("src/main/java/com/example/demo/repositories/images/"+imageName+".jpg");
+	    res.getOutputStream().write(Files.readAllBytes(path));
+	    res.getOutputStream().flush();
 	}
-
+	
 	public List<HotelPartenaireTarif> getAgencePartenaire(Agence agenceLogin) {
 		// TODO Auto-generated method stub
 		return null;

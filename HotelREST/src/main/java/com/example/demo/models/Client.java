@@ -27,6 +27,22 @@ public class Client {
 		this.carteCredit = carteCredit;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public CarteCredit getCarteCredit() {
+		return carteCredit;
+	}
+
+	public void setCarteCredit(CarteCredit carteCredit) {
+		this.carteCredit = carteCredit;
+	}
+
 	public String getNom() {
 		return nom;
 	}
@@ -41,6 +57,11 @@ public class Client {
 
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+
+	@Override
+	public String toString() {
+		return "Client [id=" + id + ", nom=" + nom + ", prenom=" + prenom + ", carteCredit=" + carteCredit + "]";
 	}
 	
 }

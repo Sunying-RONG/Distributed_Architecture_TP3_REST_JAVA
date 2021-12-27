@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class CarteCredit {
@@ -16,15 +17,13 @@ public class CarteCredit {
 	private String cvcCode;
 	private int expireMois; // 2 chiffres
 	private int expireAnnee; // 4 chiffres
-	
+	@Transient
 	private Calendar current = Calendar.getInstance();
 
 	public CarteCredit() {
-		super();
 	}
 
 	public CarteCredit(String carteNumero, String cvcCode, int expireMois, int expireAnnee) {
-		super();
 		this.setCarteNumero(carteNumero);
 		this.setCvcCode(cvcCode);
 		if(this.carteValide(expireMois, expireAnnee)) {
@@ -33,6 +32,14 @@ public class CarteCredit {
 		} else {
 			System.out.println("Carte invalidee !");
 		}
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getCarteNumero() {
@@ -79,6 +86,12 @@ public class CarteCredit {
 		Calendar dateExpiree = Calendar.getInstance();
 		dateExpiree.set(annee, mois-1, 1);
 		return dateExpiree.after(current);
+	}
+
+	@Override
+	public String toString() {
+		return "CarteCredit [id=" + id + ", carteNumero=" + carteNumero + ", cvcCode=" + cvcCode + ", expireMois="
+				+ expireMois + ", expireAnnee=" + expireAnnee + "]";
 	}
 	
 }

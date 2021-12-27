@@ -3,6 +3,7 @@ package com.example.demo.models;
 import java.util.Calendar;
 
 public class CarteCredit {
+	private long id;
 	private String carteNumero;
 	private String cvcCode;
 	private int expireMois; // 2 chiffres
@@ -24,6 +25,14 @@ public class CarteCredit {
 		} else {
 			System.out.println("Carte invalidee !");
 		}
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getCarteNumero() {
@@ -70,6 +79,12 @@ public class CarteCredit {
 		Calendar dateExpiree = Calendar.getInstance();
 		dateExpiree.set(annee, mois-1, 1);
 		return dateExpiree.after(current);
+	}
+
+	@Override
+	public String toString() {
+		return "CarteCredit [id=" + id + ", carteNumero=" + carteNumero + ", cvcCode=" + cvcCode + ", expireMois="
+				+ expireMois + ", expireAnnee=" + expireAnnee + "]";
 	}
 	
 }

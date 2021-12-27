@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 public class Client {
+	private long id;
 	private String nom;
 	private String prenom;
 	private CarteCredit carteCredit;
@@ -13,6 +14,22 @@ public class Client {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
+		this.carteCredit = carteCredit;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public CarteCredit getCarteCredit() {
+		return carteCredit;
+	}
+
+	public void setCarteCredit(CarteCredit carteCredit) {
 		this.carteCredit = carteCredit;
 	}
 
@@ -30,6 +47,11 @@ public class Client {
 
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+
+	@Override
+	public String toString() {
+		return "Client [nom=" + nom + ", prenom=" + prenom + ", carteCredit=" + carteCredit + "]";
 	}
 	
 }

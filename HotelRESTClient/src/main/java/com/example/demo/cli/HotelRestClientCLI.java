@@ -1,9 +1,11 @@
 package com.example.demo.cli;
 
+import java.awt.Desktop;
 import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -134,6 +136,7 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 						System.out.println();
 						System.out.println("Date départ (dd/MM/yyyy): ");
 						inputStringToCalendar = new StringToCalendar(reader);
+						dateDepart = inputStringToCalendar.process();
 						dateDepartCal = (Calendar) inputStringToCalendar.processToCalendar(dateDepart);
 					}
 					System.out.println();
@@ -222,11 +225,15 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 						CarteCredit createdCarteCredit = new CarteCredit(carteNumero, cvcCode, expireMois, expireAnnee);
 						uri = HOTEL_BOOK_URL+"/cartecredit";
 						CarteCredit returnedCarteCredit = proxy.postForObject(uri, createdCarteCredit, CarteCredit.class);
-
+						System.out.println(createdCarteCredit.toString());
+						System.out.println(returnedCarteCredit.toString());
+						
 						Client createdClient = new Client(nom, prenom, returnedCarteCredit);
 						uri = HOTEL_BOOK_URL+"/client";
 						Client returnedClient = proxy.postForObject(uri, createdClient, Client.class);
-						
+						System.out.println(createdClient.toString());
+						System.out.println(returnedClient.toString());
+
 						HotelPartenaireTarif hotelPartenaireTarif = offreChoisi.getHotelPartenaireTarif();
 						int hotelId = hotelPartenaireTarif.getHotel().getHotelId();
 						List<Chambre> chambreChoisi = offreChoisi.getListChambre();
@@ -236,13 +243,12 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 						reservationId = reservationId.replaceAll("\\s+","");
 						Reservation createdRes = new Reservation(reservationId, chambreChoisi, 
 								dateArriveeCal, dateDepartCal, returnedClient, prixChoisi);
-						uri = HOTEL_BOOK_URL+"/reservation";
-						Reservation returnedRes = proxy.postForObject(uri, createdRes, Reservation.class);
-						//hotelPartenaireTarif, reservationId, chambreChoisi, dateArrivee, dateDepart, client, prix, agence
 						try {
-							uri = HOTEL_BOOK_URL+"/addreservation/"+agenceId;
+							uri = HOTEL_BOOK_URL+"/reservation";
+							Reservation returnedRes = proxy.postForObject(uri, createdRes, Reservation.class);
+							uri = HOTEL_BOOK_URL+"/addreservationagence/"+agenceId;
 							proxy.put(uri, returnedRes);
-							uri = HOTEL_BOOK_URL+"/addreservation/"+hotelId;
+							uri = HOTEL_BOOK_URL+"/addreservationhotel/"+hotelId;
 							proxy.put(uri, returnedRes);
 							System.out.println("Réservé avec succès. Votre numéro de réservation est "+reservationId);
 						} catch (Exception e) {
@@ -365,16 +371,54 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 		return null;
 	}
 	
-	public void displayImage(String imageName) {
+	public void displayImage(String imageName) throws Exception {
 		String uri = HOTEL_SEARCH_URL+"/hotel/image?imageName="+imageName;
-		Image image = proxy.getForObject(uri, Image.class);
-		JFrame imageFrame = new JFrame();
-        imageFrame.setSize(1024, 683);
-        JLabel imageLabel = new JLabel(new ImageIcon(image));
-        imageFrame.add(imageLabel);
-        imageFrame.setVisible(true);
-        imageFrame.setAlwaysOnTop(true);
+//		Image image = proxy.getForObject(uri, Image.class);
+//		JFrame imageFrame = new JFrame();
+//        imageFrame.setSize(1024, 683);
+//        JLabel imageLabel = new JLabel(new ImageIcon(image));
+//        imageFrame.add(imageLabel);
+//        imageFrame.setVisible(true);
+//        imageFrame.setAlwaysOnTop(true);
+//		proxy.getForObject(uri, null);
+
+//        if (Desktop.isDesktopSupported()) {
+//            // Windows
+//            Desktop.getDesktop().browse(new URI(uri));
+//        } else {
+//            // Ubuntu
+//            Runtime runtime = Runtime.getRuntime();
+//            runtime.exec("/usr/bin/firefox -new-window " + uri);
+//        }
+//		Runtime rt = Runtime.getRuntime();
+//		rt.exec("open " + uri);
+		
+		String myOS = System.getProperty("os.name").toLowerCase();
+		System.out.println("(Your operating system is: "+ myOS +")\n");
+        try {
+            if(Desktop.isDesktopSupported()) { // Probably Windows
+            	System.out.println(" -- Going with Desktop.browse ...");
+                Desktop desktop = Desktop.getDesktop();
+                desktop.browse(new URI(uri));
+            } else { // Definitely Non-windows
+                Runtime runtime = Runtime.getRuntime();
+                if(myOS.contains("mac")) { // Apples
+                	System.out.println(" -- Going on Apple with 'open'...");
+                    runtime.exec("open " + uri);
+                } 
+                else if(myOS.contains("nix") || myOS.contains("nux")) { // Linux flavours 
+                	System.out.println(" -- Going on Linux with 'xdg-open'...");
+                    runtime.exec("xdg-open " + uri);
+                }
+                else 
+                	System.out.println("I was unable to launch a browser in your OS :( #SadFace");
+            }
+        }
+        catch(Exception e) {
+        	System.out.println("**Stuff wrongly: "+ e.getMessage());
+        }
     }
+	
 	
 	public void processDisplayInput(BufferedReader reader, String display, List<String> listChambreId) {
 		try {

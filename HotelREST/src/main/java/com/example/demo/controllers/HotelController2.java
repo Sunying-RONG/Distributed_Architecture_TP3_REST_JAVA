@@ -69,23 +69,23 @@ public class HotelController2 {
 	
 	@ResponseStatus(HttpStatus.CREATED) //return code 201 if created
 	@PostMapping(uri+"/cartecredit") //create new
-	public CarteCredit createCarteCredit(CarteCredit carteCredit) {
+	public CarteCredit createCarteCredit(@RequestBody CarteCredit carteCredit) {
 		return cartecreditRepository.save(carteCredit);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED) //return code 201 if created
 	@PostMapping(uri+"/client") //create new
-	public Client createClient(Client client) {
+	public Client createClient(@RequestBody Client client) {
 		return clientRepository.save(client);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED) //return code 201 if created
 	@PostMapping(uri+"/reservation") //create new
-	public Reservation createReservation(Reservation res) {
+	public Reservation createReservation(@RequestBody Reservation res) {
 		return reservationRepository.save(res);
 	}
 
-	@PutMapping(uri+"/addreservation/{agenceId}")
+	@PutMapping(uri+"/addreservationagence/{agenceId}")
 	public Agence updateAgenceRes(@RequestBody Reservation reservation,
 			@PathVariable String agenceId) {
 		Agence agenceLogin = agenceRepository.findByIdentifiant(agenceId);
@@ -107,7 +107,7 @@ public class HotelController2 {
 //				});
 	}
 	
-	@PutMapping(uri+"/addreservation/{hotelId}")
+	@PutMapping(uri+"/addreservationhotel/{hotelId}")
 	public Hotel updateHotelRes(@RequestBody Reservation reservation,
 			@PathVariable long hotelId) {
 		return hotelRepository.findById(hotelId)
