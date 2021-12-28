@@ -1,7 +1,6 @@
 package com.example.demo.cli;
 
 import java.awt.Desktop;
-import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,34 +9,23 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.models.Agence;
 import com.example.demo.models.CarteCredit;
 import com.example.demo.models.Chambre;
 import com.example.demo.models.Client;
-import com.example.demo.models.Employee;
-import com.example.demo.models.Hotel;
 import com.example.demo.models.HotelPartenaireTarif;
 import com.example.demo.models.Lit;
 import com.example.demo.models.Propose;
 import com.example.demo.models.Reservation;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class HotelRestClientCLI extends AbstractMain implements CommandLineRunner {
@@ -47,8 +35,6 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 	public static StringToCalendar inputStringToCalendar;
 	public static StringToDouble inputStringToDouble;
 	public static StringToInt inputStringToInt;
-//	private static String URI_EMPLOYEES; // hotelsearch/api
-//	private static String URI_EMPLOYEES_ID; // <service_uri>/employees/{id}
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -59,9 +45,6 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 					new InputStreamReader(System.in));
 			setHotelSearchUrl(inputReader);
 			setHotelBookUrl(inputReader);
-//			URI_EMPLOYEES = SERVICE_URL+"/hotel";
-//			URI_EMPLOYEES_ID = URI_EMPLOYEES+"/{id}";
-			
 			do {
 				menu();
 				userInput = inputReader.readLine();
@@ -174,13 +157,13 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 						System.out.println("Saisir l‘identifiant de l'offre pour réserver : ");
 						String identifiantOffre = reader.readLine();
 						System.out.println();
-						Propose offreChoisi = this.getPropose(allCombinations, identifiantOffre);
+						Propose offreChoisi = this.checkPropose(allCombinations, identifiantOffre);
 						while (offreChoisi == null) {
 							System.err.println("Désolé, pas d'hôtel correspond. Veuillez réessayer.");
 							System.out.println("Saisir l‘identifiant de l'offre pour réserver : ");
 							identifiantOffre = reader.readLine();
 							System.out.println();
-							offreChoisi = this.getPropose(allCombinations, identifiantOffre);
+							offreChoisi = this.checkPropose(allCombinations, identifiantOffre);
 						}
 						
 						System.out.println(identifiantOffre+" est choisi.");
@@ -362,7 +345,7 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 		return reservationId;
 	}
 	
-	private Propose getPropose(Propose[] allCombinationsList, String identifiantOffre) {
+	private Propose checkPropose(Propose[] allCombinationsList, String identifiantOffre) {
 		for (Propose propose : allCombinationsList) {
 			if (propose.getOffreId().equals(identifiantOffre)) {
 				return propose;

@@ -74,8 +74,8 @@ public class HotelController1 {
 
 	@GetMapping(uri+"/agence/propose")
 	public Propose[] getAllCombinations(@RequestParam String agenceLoginId, 
-			@RequestParam String dateArrivee, String dateDepart, 
-			int nombrePerson) {
+			@RequestParam String dateArrivee, @RequestParam String dateDepart, 
+			@RequestParam int nombrePerson) {
 		Calendar dateArriveeCal = stringToCal(dateArrivee);
 		Calendar dateDepartCal = stringToCal(dateDepart);
 		Agence agenceLogin = agenceRepository.findByIdentifiant(agenceLoginId);
