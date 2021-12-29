@@ -14,7 +14,6 @@ import com.example.demo.models.Adresse;
 import com.example.demo.models.AdresseType;
 import com.example.demo.models.Agence;
 import com.example.demo.models.Chambre;
-import com.example.demo.models.Employee;
 import com.example.demo.models.GPS;
 import com.example.demo.models.Hotel;
 import com.example.demo.models.HotelPartenaireTarif;

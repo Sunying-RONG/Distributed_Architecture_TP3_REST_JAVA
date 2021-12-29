@@ -1,18 +1,10 @@
 package com.example.demo.controllers;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +19,7 @@ import com.example.demo.exceptions.HotelNotFoundException;
 import com.example.demo.models.Agence;
 import com.example.demo.models.CarteCredit;
 import com.example.demo.models.Client;
-import com.example.demo.models.Employee;
 import com.example.demo.models.Hotel;
-import com.example.demo.models.HotelPartenaireTarif;
-import com.example.demo.models.Lit;
-import com.example.demo.models.Propose;
 import com.example.demo.models.Reservation;
 import com.example.demo.repositories.AgenceRepository;
 import com.example.demo.repositories.CartecreditRepository;
@@ -95,17 +83,6 @@ public class HotelController2 {
 		agenceLogin.setListReservation(resList);
 		agenceRepository.save(agenceLogin);
 		return agenceLogin;
-//		return agenceRepository.findByIdentifiant(agenceId)
-//				.map(agence -> {
-//					List<Reservation> resList = agence.getListReservation();
-//					resList.add(reservation);
-//					agence.setListReservation(resList);
-//					agenceRepository.save(agence);
-//					return agence;
-//				})
-//				.orElseGet(() -> {
-//					return null;
-//				});
 	}
 	
 	@PutMapping(uri+"/addreservationhotel/{hotelId}")

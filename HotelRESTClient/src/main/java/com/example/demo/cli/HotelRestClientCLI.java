@@ -98,20 +98,13 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 					String agenceLoginId = agenceLogin[0].getIdentifiant();
 					System.out.println(agenceLoginId+" login avec succès !");
 
-//					List<HotelPartenaireTarif> p =  proxy1.getAgencePartenaire(agenceLogin);
-//					for (HotelPartenaireTarif hp : p) {
-//						System.out.println("partenaire : "+hp.getPourcentage());
-//					}
-					
 					System.out.println("Date arrivée (dd/MM/yyyy) aujourd'hui ou après aujourd'hui : ");
-//					String dateArrivee = reader.readLine();
 					inputStringToCalendar = new StringToCalendar(reader);
 					String dateArrivee = inputStringToCalendar.process();
 					Calendar dateArriveeCal = (Calendar) inputStringToCalendar.processToCalendar(dateArrivee);
 					System.out.println();
 					
 					System.out.println("Date départ (dd/MM/yyyy) après date arrivée : ");
-//					String dateDepart = reader.readLine();
 					inputStringToCalendar = new StringToCalendar(reader);
 					String dateDepart = inputStringToCalendar.process();
 					Calendar dateDepartCal = (Calendar) inputStringToCalendar.processToCalendar(dateDepart);
@@ -137,8 +130,6 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 							"&nombrePerson="+nombrePerson;
 					System.out.println(uri);
 					Propose[] allCombinations = proxy.getForObject(uri, Propose[].class);
-//					List<Propose> allCombinations = 
-//							proxy1.getAllCombinations(agenceLogin, this.calendarToXMLGregorianCalendar(dateArrivee), this.calendarToXMLGregorianCalendar(dateDepart), nombrePerson);
 					if (allCombinations.length == 0) {
 						System.err.println("Désolé, pas d'hôtel correspond. Veuillez réessayer.");
 						break;
@@ -191,14 +182,10 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 						
 						uri = HOTEL_BOOK_URL+"/cartecredit";
 						CarteCredit returnedCarteCredit = proxy.postForObject(uri, createdCarteCredit, CarteCredit.class);
-						System.out.println(createdCarteCredit.toString());
-						System.out.println(returnedCarteCredit.toString());
 						
 						Client createdClient = new Client(nom, prenom, returnedCarteCredit);
 						uri = HOTEL_BOOK_URL+"/client";
 						Client returnedClient = proxy.postForObject(uri, createdClient, Client.class);
-						System.out.println(createdClient.toString());
-						System.out.println(returnedClient.toString());
 
 						HotelPartenaireTarif hotelPartenaireTarif = offreChoisi.getHotelPartenaireTarif();
 						int hotelId = hotelPartenaireTarif.getHotel().getHotelId();

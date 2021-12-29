@@ -61,7 +61,7 @@ public class ComparateurRestClientCLI extends CompareAbstractMain implements Com
 	protected void menu() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(QUIT+". Quit.");
-		builder.append("\n1. Afficher disponibilité de tous les hotels.");
+		builder.append("\n1. Afficher disponibilité de tous les hotels pour comparer.");
 		System.out.println(builder);
 	}
 	
@@ -140,7 +140,6 @@ public class ComparateurRestClientCLI extends CompareAbstractMain implements Com
 			Hotel hotel = propose.getHotelPartenaireTarif().getHotel();
 			System.out.println(
 					"Agence : "+ agence.getIdentifiant() + "\n" +
-					"Identifiant de l'offre : " + propose.getOffreId() + "\n" +
 					"Nom de l'hôtel : " + hotel.getNom() + "\n" +
 					"Adresse de l'hôtel : " + hotel.getAdresse() + "\n" +
 					"Nombre d'étoiles de l'hôtel : " + hotel.getCategorie() + "\n" +
