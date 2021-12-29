@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.exceptions.CarteCreditException;
 import com.example.demo.exceptions.HotelNotFoundException;
 import com.example.demo.models.Agence;
 import com.example.demo.models.CarteCredit;
@@ -69,7 +70,7 @@ public class HotelController2 {
 	
 	@ResponseStatus(HttpStatus.CREATED) //return code 201 if created
 	@PostMapping(uri+"/cartecredit") //create new
-	public CarteCredit createCarteCredit(@RequestBody CarteCredit carteCredit) {
+	public CarteCredit createCarteCredit(@RequestBody CarteCredit carteCredit) throws CarteCreditException {
 		return cartecreditRepository.save(carteCredit);
 	}
 	

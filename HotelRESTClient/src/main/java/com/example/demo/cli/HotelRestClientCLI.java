@@ -16,6 +16,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.models.Agence;
@@ -75,7 +76,7 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 	protected void menu() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(QUIT+". Quit.");
-		builder.append("\n1. Agence Login :");
+		builder.append("\n1. Agence Login.");
 		System.out.println(builder);
 	}
 	
@@ -186,26 +187,8 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 						String prenom = reader.readLine();
 						System.out.println();
 						
-						// carte credit
-						System.out.println("Numéro de carte crédit (16 chiffres) : ");
-						String carteNumero = reader.readLine();
-						System.out.println();
+						CarteCredit createdCarteCredit = createCarteCredit(reader);
 						
-						System.out.println("Mois expiré (2 chiffres) : ");
-						inputStringToInt = new StringToInt(reader);
-						int expireMois = (int) inputStringToInt.process();
-						System.out.println();
-						
-						System.out.println("Année expirée (4 chiffres) : ");
-						inputStringToInt = new StringToInt(reader);
-						int expireAnnee = (int) inputStringToInt.process();
-						System.out.println();
-						
-						System.out.println("CVC code (3 chiffres) : ");
-						String cvcCode = reader.readLine();
-						System.out.println();
-						
-						CarteCredit createdCarteCredit = new CarteCredit(carteNumero, cvcCode, expireMois, expireAnnee);
 						uri = HOTEL_BOOK_URL+"/cartecredit";
 						CarteCredit returnedCarteCredit = proxy.postForObject(uri, createdCarteCredit, CarteCredit.class);
 						System.out.println(createdCarteCredit.toString());
@@ -241,8 +224,10 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 					}
 					break;
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (HttpClientErrorException e) { // format error in cli
+			System.err.println(e.getMessage());
 		}
 	}
 	
@@ -424,6 +409,44 @@ public class HotelRestClientCLI extends AbstractMain implements CommandLineRunne
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private CarteCredit createCarteCredit(BufferedReader reader) {
+		// carte credit
+		CarteCredit createdCarteCredit = null;
+		while(!(createdCarteCredit instanceof CarteCredit)) {
+			System.out.println("Numéro de carte crédit (16 chiffres) : ");
+			String carteNumero = null;
+			try {
+				carteNumero = reader.readLine();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println();
+			
+			System.out.println("Mois expiré (2 chiffres) : ");
+			inputStringToInt = new StringToInt(reader);
+			int expireMois = (int) inputStringToInt.process();
+			System.out.println();
+			
+			System.out.println("Année expirée (4 chiffres) : ");
+			inputStringToInt = new StringToInt(reader);
+			int expireAnnee = (int) inputStringToInt.process();
+			System.out.println();
+			
+			System.out.println("CVC code (3 chiffres) : ");
+			String cvcCode = null;
+			try {
+				cvcCode = reader.readLine();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println();
+			createdCarteCredit = new CarteCredit(carteNumero, cvcCode, expireMois, expireAnnee);
+		}
+		return createdCarteCredit;
 	}
 	
 //	private XMLGregorianCalendar calendarToXMLGregorianCalendar(Calendar cal) {

@@ -15,7 +15,7 @@ public class StringToInt {
 	}
 
 	public void setMessage() {
-		message = "Veuillez saisir prix en chiffre Integer:";		
+		message = "Veuillez saisir en chiffre Integer:";		
 	}
 
 	public void setValidityCriterion() {
